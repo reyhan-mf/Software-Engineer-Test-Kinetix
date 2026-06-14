@@ -1,5 +1,5 @@
 const express = require("express");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/User");
 
@@ -18,7 +18,10 @@ const registerUser = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.status(201).json({ token });
+    res.status(201).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -39,23 +42,26 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-    
-    res.status(200).json( {token} );
-} catch (error) {
+
+    res.status(201).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 const logoutUser = async (req, res) => {
-    try {
-        return res.status(200).json({message: 'Logout Success'});
-    } catch (error) {
-        res.status(500).json({ message: error.message});
-    }
-}
+  try {
+    return res.status(200).json({ message: "Logout Success" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.post('/logout', logoutUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+router.post("/logout", logoutUser);
 
 module.exports = router;
