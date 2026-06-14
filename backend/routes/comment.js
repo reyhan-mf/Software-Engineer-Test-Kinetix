@@ -1,0 +1,78 @@
+const Comment = require("../models/Comment");
+const express = require("express");
+const router = express.Router();
+const checkUser = require("../middleware/auth");
+
+const createComment = async (req, res) => {
+  try {
+
+    const { postId } = req.params; 
+    const comment = await Comment.create({
+      content: req.body.content,
+      author: req.user.id,
+      post: postId,
+    });
+
+    return res.status(201).json({ comment });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getComments = async (req, res) => {
+  try {
+    const {postId} = req.params;
+
+    const comment = await Comment.find({post: postId}).populate("author", "name email");
+    res.status(200).json({ comment });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comment = await Comment.findById(id);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (comment.author.toString() !== req.user.id) {
+      return res.status(403).json({ message: "403" });
+    }
+
+    const newComment = await Comment.findByIdAndUpdate(id, req.body, { new: true });
+
+    return res.status(200).json({ newComment });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comment = await Comment.findById(id);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (comment.author.toString() !== req.user.id) {
+      return res.status(403).json({ message: "403" });
+    }
+
+    const deletedComment = await Comment.findByIdAndDelete(id);
+
+    return res.status(200).json({ deletedComment });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+router.get("/posts/:postId/comments", getComments);
+router.post("/posts/:postId/comments", checkUser, createComment);
+router.put("/comments/:id", checkUser, updateComment);
+router.delete("/comments/:id", checkUser, deleteComment);
+
+module.exports = router;

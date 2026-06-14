@@ -6,8 +6,8 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/posts');
-const commentRoutes = require('./routes/comments');
-const userRoutes = require('./routes/users');
+const commentRoutes = require('./routes/comment');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -20,8 +20,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api', commentRoutes);
+app.use('/api', userRoutes);
 
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;
