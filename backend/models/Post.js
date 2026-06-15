@@ -1,8 +1,9 @@
-//  Field: title (string, required), content (string, required)
-//  Field: category (string, default: 'General')
-//  Field: author — bukan string biasa, tapi referensi ke User (ini konsep baru: ObjectId & ref)
-//  Field: coverImage (string, opsional — untuk gambar thumbnail)
-//  Ada timestamps
+// Post model.
+// - title (required), content (required)
+// - category (default: 'General')
+// - author: ObjectId reference to a User
+// - coverImage (optional): URL of the thumbnail image
+// - timestamps (createdAt, updatedAt)
 
 const mongoose = require('mongoose');
 

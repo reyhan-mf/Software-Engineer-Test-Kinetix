@@ -5,8 +5,12 @@ const checkUser = require("../middleware/auth");
 
 const createComment = async (req, res) => {
   try {
-
     const { postId } = req.params;
+
+    if (!req.body.content?.trim()) {
+      return res.status(400).json({ message: "Comment content is required" });
+    }
+
     const comment = await Comment.create({
       content: req.body.content,
       author: req.user.id,
@@ -42,7 +46,13 @@ const updateComment = async (req, res) => {
     }
 
     if (comment.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: "403" });
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to edit this comment" });
+    }
+
+    if (!req.body.content?.trim()) {
+      return res.status(400).json({ message: "Comment content is required" });
     }
 
     const newComment = await Comment.findByIdAndUpdate(id, req.body, { new: true });
@@ -62,7 +72,9 @@ const deleteComment = async (req, res) => {
     }
 
     if (comment.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: "403" });
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to delete this comment" });
     }
 
     // Collect the whole subtree (replies, replies-to-replies, …) so nested
