@@ -76,11 +76,135 @@ export const ArrowRight = (p) => (
   </svg>
 );
 
+export const BookOpen = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 7v14" />
+    <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+  </svg>
+);
+
 export const LogOut = (p) => (
   <svg {...base} {...p}>
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
     <polyline points="16 17 21 12 16 7" />
     <line x1="21" x2="9" y1="12" y2="12" />
+  </svg>
+);
+
+export const PenSquare = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
+  </svg>
+);
+
+export const Calendar = (p) => (
+  <svg {...base} {...p}>
+    <path d="M8 2v4" />
+    <path d="M16 2v4" />
+    <rect width="18" height="18" x="3" y="4" rx="2" />
+    <path d="M3 10h18" />
+  </svg>
+);
+
+export const RefreshCw = (p) => (
+  <svg {...base} {...p}>
+    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+    <path d="M21 3v5h-5" />
+    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+    <path d="M3 21v-5h5" />
+  </svg>
+);
+
+export const Search = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
+
+export const ChevronLeft = (p) => (
+  <svg {...base} {...p}>
+    <path d="m15 18-6-6 6-6" />
+  </svg>
+);
+
+export const ChevronRight = (p) => (
+  <svg {...base} {...p}>
+    <path d="m9 18 6-6-6-6" />
+  </svg>
+);
+
+export const ArrowLeft = (p) => (
+  <svg {...base} {...p}>
+    <path d="m12 19-7-7 7-7" />
+    <path d="M19 12H5" />
+  </svg>
+);
+
+export const Trash = (p) => (
+  <svg {...base} {...p}>
+    <path d="M3 6h18" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    <line x1="10" x2="10" y1="11" y2="17" />
+    <line x1="14" x2="14" y1="11" y2="17" />
+  </svg>
+);
+
+export const Pencil = (p) => (
+  <svg {...base} {...p}>
+    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+    <path d="m15 5 4 4" />
+  </svg>
+);
+
+export const MessageCircle = (p) => (
+  <svg {...base} {...p}>
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+  </svg>
+);
+
+export const Send = (p) => (
+  <svg {...base} {...p}>
+    <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+    <path d="m21.854 2.147-10.94 10.939" />
+  </svg>
+);
+
+export const ImagePlus = (p) => (
+  <svg {...base} {...p}>
+    <path d="M16 5h6" />
+    <path d="M19 2v6" />
+    <path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5" />
+    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+    <circle cx="9" cy="9" r="2" />
+  </svg>
+);
+
+export const X = (p) => (
+  <svg {...base} {...p}>
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+);
+
+export const Camera = (p) => (
+  <svg {...base} {...p}>
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+    <circle cx="12" cy="13" r="3" />
+  </svg>
+);
+
+export const ChevronDown = (p) => (
+  <svg {...base} {...p}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+export const Reply = (p) => (
+  <svg {...base} {...p}>
+    <polyline points="9 17 4 12 9 7" />
+    <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
   </svg>
 );
 

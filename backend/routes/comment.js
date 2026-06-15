@@ -6,11 +6,12 @@ const checkUser = require("../middleware/auth");
 const createComment = async (req, res) => {
   try {
 
-    const { postId } = req.params; 
+    const { postId } = req.params;
     const comment = await Comment.create({
       content: req.body.content,
       author: req.user.id,
       post: postId,
+      parent: req.body.parent || null,
     });
 
     return res.status(201).json({ comment });
@@ -23,7 +24,9 @@ const getComments = async (req, res) => {
   try {
     const {postId} = req.params;
 
-    const comment = await Comment.find({post: postId}).populate("author", "name email");
+    const comment = await Comment.find({ post: postId })
+      .populate("author", "name email avatar")
+      .sort({ createdAt: -1 });
     res.status(200).json({ comment });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -62,9 +65,20 @@ const deleteComment = async (req, res) => {
       return res.status(403).json({ message: "403" });
     }
 
-    const deletedComment = await Comment.findByIdAndDelete(id);
+    // Collect the whole subtree (replies, replies-to-replies, …) so nested
+    // descendants aren't left orphaned when a mid-thread comment is removed.
+    const toDelete = [id];
+    let frontier = [id];
+    while (frontier.length) {
+      const children = await Comment.find({ parent: { $in: frontier } }).select("_id");
+      if (!children.length) break;
+      const childIds = children.map((c) => c._id);
+      toDelete.push(...childIds);
+      frontier = childIds;
+    }
+    await Comment.deleteMany({ _id: { $in: toDelete } });
 
-    return res.status(200).json({ deletedComment });
+    return res.status(200).json({ message: "Comment deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

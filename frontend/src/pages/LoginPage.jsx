@@ -31,7 +31,7 @@ const LoginForm = () => {
     if (errors[id]) setErrors((prev) => ({ ...prev, [id]: undefined }));
   };
 
-  // Validate on blur, not on every keystroke (skill: inline-validation)
+  
   const handleBlur = (e) => {
     const { id } = e.target;
     setErrors((prev) => ({ ...prev, [id]: validate()[id] }));

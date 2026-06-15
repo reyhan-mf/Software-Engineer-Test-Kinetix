@@ -74,7 +74,7 @@ const RegisterForm = () => {
   return (
     <AuthShell
       title="Create your account"
-      subtitle="Join Inkwell and start sharing your stories."
+      subtitle="Join Blog and start sharing your stories."
       footer={
         <>
           Already have an account?{" "}

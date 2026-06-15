@@ -5,8 +5,33 @@ const checkUser = require("../middleware/auth");
 
 const getAllPost = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author", "name email");
-    res.status(200).json({ posts });
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 6, 1), 50);
+    const search = (req.query.search || "").trim();
+
+    const filter = search
+      ? {
+          $or: [
+            { title: { $regex: search, $options: "i" } },
+            { content: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const total = await Post.countDocuments(filter);
+    const posts = await Post.find(filter)
+      .populate("author", "name email avatar")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+      page,
+      limit,
+      total,
+      totalPages: Math.max(Math.ceil(total / limit), 1),
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -15,7 +40,7 @@ const getAllPost = async (req, res) => {
 const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
-    const post = await Post.findById(id).populate("author", "name email");
+    const post = await Post.findById(id).populate("author", "name email avatar");
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -27,14 +52,22 @@ const getPostById = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const { title, content, category, coverImage } = req.body;
+
+    if (!title?.trim() || !content?.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Title and content are required" });
+    }
 
     const post = await Post.create({
       title,
       content,
       category,
+      coverImage,
       author: req.user.id,
     });
+    await post.populate("author", "name email avatar");
 
     return res.status(201).json({ post });
   } catch (error) {
@@ -51,12 +84,21 @@ const updatePost = async (req, res) => {
     }
 
     if (post.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: "403" });
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to edit this post" });
     }
 
-    const newPost = await Post.findByIdAndUpdate(id, req.body, { new: true });
+    // Whitelist editable fields so author/createdAt can't be overwritten.
+    const { title, content, category, coverImage } = req.body;
+    const updates = { title, content, category, coverImage };
 
-    return res.status(200).json({ newPost });
+    const updated = await Post.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    }).populate("author", "name email avatar");
+
+    return res.status(200).json({ post: updated });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -71,12 +113,14 @@ const deletePost = async (req, res) => {
     }
 
     if (post.author.toString() !== req.user.id) {
-      return res.status(403).json({ message: "403" });
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to delete this post" });
     }
 
-    const deletedPost = await Post.findByIdAndDelete(id);
+    await Post.findByIdAndDelete(id);
 
-    return res.status(200).json({ deletedPost });
+    return res.status(200).json({ message: "Post deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
