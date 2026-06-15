@@ -4,6 +4,7 @@ import api from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
 import AuthShell from "../components/auth/AuthShell";
 import Field from "../components/auth/Field";
+import GoogleAuthButton from "../components/auth/GoogleAuthButton";
 import { Mail, Lock, Spinner, ArrowRight, AlertCircle } from "../components/icons";
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -85,6 +86,8 @@ const LoginForm = () => {
           <span>{serverError}</span>
         </div>
       )}
+
+      <GoogleAuthButton onError={setServerError} />
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
         <Field
