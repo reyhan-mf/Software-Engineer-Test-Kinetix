@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const connectDB = require('./db');
 
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/posts');
@@ -15,6 +16,22 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+
+// Await DB connection on every request so cold-start requests don't race the
+// background connectDB() call in server.js (safe: db.js returns cached conn).
+app.use(async (req, res, next) => {
+  try { await connectDB(); next(); }
+  catch (err) { res.status(503).json({ message: 'Database unavailable' }); }
+});
+
+// experimentalServices strips the /api routePrefix before forwarding to this
+// service. Restore it so routes mounted at /api/* continue to match.
+app.use((req, _res, next) => {
+  if (!req.path.startsWith('/api')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
 // Local-dev only: serve disk uploads. In production images live in Vercel Blob.
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

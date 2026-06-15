@@ -4,3 +4,6 @@ uploads/
 *.log
 dist/
 /.claude
+
+.vercel
+.env*
